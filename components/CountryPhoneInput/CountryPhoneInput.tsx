@@ -27,6 +27,7 @@ import React, {
   useMemo,
   useCallback,
   useRef,
+  useState,
 } from 'react';
 import { Select, Input, Space } from 'antd';
 import type { InputRef } from 'antd';
@@ -141,6 +142,8 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
 
       // Dropdown config
       enableSearch = true,
+      searchIcon,
+      searchPlaceholder = 'Search country',
       searchNotFound = 'No country found',
       enableArrow = true,
       dropdownIcon,
@@ -217,38 +220,83 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
     // Ref for Ant Design Input component
     const antdInputRef = useRef<InputRef>(null);
 
-    // Build Select options - search is handled internally by Ant Design
+    // Search state for dropdown
+    const [searchQuery, setSearchQuery] = useState('');
+
+    // Filter countries based on search query
+    const displayedCountries = useMemo(() => {
+      if (!searchQuery.trim()) return filteredCountries;
+      
+      const query = searchQuery.toLowerCase().replace(/^\+/, '');
+      return filteredCountries.filter((country) => {
+        return (
+          country.name.toLowerCase().includes(query) ||
+          country.iso2.toLowerCase().includes(query) ||
+          country.dialCode.includes(query)
+        );
+      });
+    }, [filteredCountries, searchQuery]);
+
+    // Build Select options
     const selectOptions = useMemo(() => {
-      return filteredCountries.map((country) => ({
+      return displayedCountries.map((country) => ({
         value: country.iso2,
         label: (
           <CountryOption country={country} useSVG={useSVG} flagUrl={flagUrl} />
         ),
-        // For search filtering - used by filterOption
-        searchText: `${country.name} ${country.iso2} ${country.dialCode}`.toLowerCase(),
       }));
-    }, [filteredCountries, useSVG, flagUrl]);
+    }, [displayedCountries, useSVG, flagUrl]);
 
     // Handle Select change
     const onSelectChange = useCallback(
       (iso2: string) => {
         handleCountryChange(iso2);
+        setSearchQuery(''); // Clear search on selection
       },
       [handleCountryChange]
     );
 
-    // Custom filter function - properly typed for Ant Design Select
-    interface SelectOptionData {
-      value: string;
-      label: React.ReactNode;
-      searchText: string;
-    }
-    const filterOption = useCallback(
-      (input: string, option?: SelectOptionData) => {
-        if (!option?.searchText) return false;
-        return option.searchText.includes(input.toLowerCase());
-      },
-      []
+    // Custom dropdown render with search field
+    const customDropdownRender = useCallback(
+      (menu: React.ReactElement) => (
+        <>
+          {enableSearch && (
+            <div style={{ padding: '8px' }}>
+              <Input
+                placeholder={searchPlaceholder}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                prefix={searchIcon || (
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ opacity: 0.45 }}
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                  </svg>
+                )}
+                style={{ marginBottom: '8px' }}
+                allowClear
+              />
+            </div>
+          )}
+          {displayedCountries.length === 0 ? (
+            <div style={{ padding: '8px 12px', color: '#999', textAlign: 'center' }}>
+              {searchNotFound}
+            </div>
+          ) : (
+            menu
+          )}
+        </>
+      ),
+      [enableSearch, searchPlaceholder, searchQuery, searchIcon, displayedCountries.length, searchNotFound]
     );
 
     // Dropdown suffix icon
@@ -295,17 +343,15 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
             value={state.country.iso2}
             onChange={onSelectChange}
             options={selectOptions}
-            showSearch={enableSearch}
-            filterOption={filterOption}
+            showSearch={false}
             optionLabelProp="label"
             suffixIcon={suffixIcon}
             disabled={disabled || disableDropdown}
             size={size}
             variant={variant}
             status={status}
-            popupRender={popupRender}
+            popupRender={popupRender || customDropdownRender}
             getPopupContainer={getPopupContainer}
-            notFoundContent={searchNotFound}
             popupMatchSelectWidth={280}
             labelRender={() => (
               <SelectedCountry

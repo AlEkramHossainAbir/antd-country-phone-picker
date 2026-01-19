@@ -112,6 +112,9 @@ export interface CountryPhoneInputProps {
   /** Enable search in dropdown */
   enableSearch?: boolean;
   
+  /** Custom search icon (appears on left side of search input) */
+  searchIcon?: ReactNode;
+  
   /** Placeholder for search input */
   searchPlaceholder?: string;
   

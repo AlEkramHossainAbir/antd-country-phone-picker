@@ -200,6 +200,8 @@ function UncontrolledExample() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `enableSearch` | `boolean` | `true` | Enable search in dropdown |
+| `searchIcon` | `ReactNode` | Search icon SVG | Custom icon for search field (SVG or React element) |
+| `searchPlaceholder` | `string` | `'Search country'` | Placeholder for search input |
 | `searchNotFound` | `ReactNode` | `'No country found'` | Content when search has no results |
 | `enableArrow` | `boolean` | `true` | Show dropdown arrow icon |
 | `dropdownIcon` | `ReactNode` | - | Custom dropdown arrow icon |
@@ -378,6 +380,17 @@ The component uses CSS Modules. Key classes:
 - `.countryOption` - Dropdown option
 
 ## 🔧 Advanced Usage
+
+### Custom Search Icon
+
+```tsx
+import { SearchOutlined } from '@ant-design/icons';
+
+<CountryPhoneInput
+  searchIcon={<SearchOutlined style={{ color: '#1890ff' }} />}
+  searchPlaceholder="Find your country"
+/>
+```
 
 ### Custom Popup Container
 
