@@ -41,7 +41,7 @@ export type SelectPassthroughProps = Omit<
   | 'filterOption'
   | 'optionLabelProp'
   | 'optionFilterProp'
-  | 'dropdownRender'
+  | 'popupRender'
   | 'suffixIcon'
   | 'getPopupContainer'
   | 'notFoundContent'
@@ -128,7 +128,7 @@ export interface CountryPhoneInputProps {
   disableDropdown?: boolean;
   
   /** Custom dropdown render function */
-  dropdownRender?: SelectProps['dropdownRender'];
+  popupRender?: SelectProps['popupRender'];
   
   /** Container for dropdown portal (same as AntD Select) */
   getPopupContainer?: (triggerNode: HTMLElement) => HTMLElement;

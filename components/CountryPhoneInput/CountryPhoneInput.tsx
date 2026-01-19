@@ -145,7 +145,7 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
       enableArrow = true,
       dropdownIcon,
       disableDropdown = false,
-      dropdownRender,
+      popupRender,
       getPopupContainer,
 
       // Display config
@@ -303,11 +303,10 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
             size={size}
             variant={variant}
             status={status}
-            dropdownRender={dropdownRender}
+            popupRender={popupRender}
             getPopupContainer={getPopupContainer}
             notFoundContent={searchNotFound}
             popupMatchSelectWidth={280}
-            dropdownStyle={{ minWidth: 280 }}
             labelRender={() => (
               <SelectedCountry
                 country={state.country}

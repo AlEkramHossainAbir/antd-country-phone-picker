@@ -204,7 +204,7 @@ function UncontrolledExample() {
 | `enableArrow` | `boolean` | `true` | Show dropdown arrow icon |
 | `dropdownIcon` | `ReactNode` | - | Custom dropdown arrow icon |
 | `disableDropdown` | `boolean` | `false` | Disable the country dropdown |
-| `dropdownRender` | `SelectProps['dropdownRender']` | - | Custom dropdown render function |
+| `popupRender` | `SelectProps['dropdownRender']` | - | Custom dropdown render function |
 | `getPopupContainer` | `(triggerNode: HTMLElement) => HTMLElement` | - | Container for dropdown portal |
 
 ### Display Configuration Props
@@ -393,7 +393,7 @@ Useful in modals or scrollable containers:
 
 ```tsx
 <CountryPhoneInput
-  dropdownRender={(menu) => (
+  popupRender={(menu) => (
     <>
       {menu}
       <div style={{ padding: 8 }}>
