@@ -6,7 +6,7 @@
  * 
  * @example
  * ```tsx
- * import { CountryPhoneInput } from 'antd-phone-input';
+ * import { CountryPhoneInput } from 'antd-country-phone-picker';
  * 
  * function App() {
  *   return (

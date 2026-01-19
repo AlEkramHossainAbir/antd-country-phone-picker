@@ -1,5 +1,5 @@
 {
-  "name": "antd-phone-input",
+  "name": "antd-country-phone-picker",
   "version": "1.0.0",
   "description": "A production-ready phone input component for Ant Design with country selection, protected dial codes, and automatic validation",
   "keywords": [
@@ -17,13 +17,13 @@
     "form",
     "typescript"
   ],
-  "homepage": "https://github.com/user/antd-phone-input#readme",
+  "homepage": "https://github.com/user/antd-country-phone-picker#readme",
   "bugs": {
-    "url": "https://github.com/user/antd-phone-input/issues"
+    "url": "https://github.com/user/antd-country-phone-picker/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/user/antd-phone-input.git"
+    "url": "git+https://github.com/user/antd-country-phone-picker.git"
   },
   "license": "MIT",
   "author": "",

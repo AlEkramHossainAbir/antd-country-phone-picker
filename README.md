@@ -2,7 +2,7 @@
 
 A production-ready, fully-typed phone input component for **Ant Design v5+**. Designed to feel like a native Ant Design component while solving common UX problems found in other phone input libraries.
 
-[![npm version](https://img.shields.io/npm/v/antd-phone-input.svg)](https://www.npmjs.com/package/antd-phone-input)
+[![npm version](https://img.shields.io/npm/v/antd-country-phone-picker.svg)](https://www.npmjs.com/package/antd-country-phone-picker)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![Ant Design](https://img.shields.io/badge/Ant%20Design-v5.29+-1890ff.svg)](https://ant.design/)
 
@@ -24,13 +24,13 @@ A production-ready, fully-typed phone input component for **Ant Design v5+**. De
 
 ```bash
 # npm
-npm install antd-phone-input
+npm install antd-country-phone-picker
 
 # yarn
-yarn add antd-phone-input
+yarn add antd-country-phone-picker
 
 # pnpm
-pnpm add antd-phone-input
+pnpm add antd-country-phone-picker
 ```
 
 ### Peer Dependencies
@@ -50,7 +50,7 @@ Make sure you have these installed:
 ### Basic Usage
 
 ```tsx
-import { CountryPhoneInput } from 'antd-phone-input';
+import { CountryPhoneInput } from 'antd-country-phone-picker';
 
 function App() {
   return (
@@ -66,7 +66,7 @@ function App() {
 
 ```tsx
 import { Form, Button } from 'antd';
-import { CountryPhoneInput } from 'antd-phone-input';
+import { CountryPhoneInput } from 'antd-country-phone-picker';
 
 function PhoneForm() {
   const [form] = Form.useForm();
@@ -109,7 +109,7 @@ function PhoneForm() {
 
 ```tsx
 import { useState } from 'react';
-import { CountryPhoneInput, PhoneValue } from 'antd-phone-input';
+import { CountryPhoneInput, PhoneValue } from 'antd-country-phone-picker';
 
 function ControlledExample() {
   const [phone, setPhone] = useState<string>('+1');
@@ -127,7 +127,7 @@ function ControlledExample() {
 
 ```tsx
 import { useRef } from 'react';
-import { CountryPhoneInput, CountryPhoneInputRef } from 'antd-phone-input';
+import { CountryPhoneInput, CountryPhoneInputRef } from 'antd-country-phone-picker';
 
 function UncontrolledExample() {
   const phoneRef = useRef<CountryPhoneInputRef>(null);
@@ -451,4 +451,4 @@ Contributions are welcome! Please read our contributing guidelines before submit
 
 ## 🐛 Issues
 
-Found a bug? Please [open an issue](https://github.com/your-repo/antd-phone-input/issues) with a detailed description and reproduction steps.
+Found a bug? Please [open an issue](https://github.com/your-repo/antd-country-phone-picker/issues) with a detailed description and reproduction steps.
