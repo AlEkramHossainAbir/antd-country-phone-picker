@@ -26,10 +26,10 @@ import React, {
   useImperativeHandle,
   useMemo,
   useCallback,
-  useState,
+  useRef,
 } from 'react';
-import { Select, Input, Space, ConfigProvider, theme } from 'antd';
-import type { SelectProps } from 'antd';
+import { Select, Input, Space } from 'antd';
+import type { InputRef } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 import type { Country } from '@/data/countries';
@@ -41,13 +41,13 @@ import { usePhoneInput } from './usePhoneInput';
 import {
   getFlagUrl,
   getFlagEmoji,
-  searchCountries,
 } from './utils';
 
 import styles from './CountryPhoneInput.module.css';
 
 /**
  * Flag component with fallback to emoji
+ * Uses standard img element for npm package compatibility (not Next.js Image)
  */
 const CountryFlag: React.FC<{
   iso2: string;
@@ -55,7 +55,7 @@ const CountryFlag: React.FC<{
   flagUrl?: string;
   size?: number;
 }> = React.memo(({ iso2, useSVG = true, flagUrl, size = 20 }) => {
-  const [error, setError] = useState(false);
+  const [error, setError] = React.useState(false);
 
   if (error) {
     return (
@@ -66,6 +66,7 @@ const CountryFlag: React.FC<{
   }
 
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={getFlagUrl(iso2, useSVG, flagUrl)}
       alt={`${iso2} flag`}
@@ -140,7 +141,6 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
 
       // Dropdown config
       enableSearch = true,
-      searchPlaceholder = 'Search country...',
       searchNotFound = 'No country found',
       enableArrow = true,
       dropdownIcon,
@@ -151,9 +151,6 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
       // Display config
       useSVG = true,
       flagUrl,
-      disableParentheses = false,
-      showDialCode = true,
-      formatOnType = false,
 
       // Passthrough props
       selectProps,
@@ -176,7 +173,6 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
     const {
       state,
       filteredCountries,
-      inputRef,
       handleCountryChange,
       handleInputChange,
       handleKeyDown,
@@ -213,49 +209,42 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
         getValue: getPhoneValue,
         setCountry,
         clear,
-        getInputElement: () => inputRef.current,
+        getInputElement: () => antdInputRef.current?.input ?? null,
       }),
-      [focus, blur, getPhoneValue, setCountry, clear, inputRef]
+      [focus, blur, getPhoneValue, setCountry, clear]
     );
 
-    // Search state for dropdown
-    const [searchValue, setSearchValue] = useState('');
+    // Ref for Ant Design Input component
+    const antdInputRef = useRef<InputRef>(null);
 
-    // Filter countries based on search
-    const displayCountries = useMemo(() => {
-      if (!searchValue) return filteredCountries;
-      return searchCountries(searchValue, filteredCountries);
-    }, [filteredCountries, searchValue]);
-
-    // Build Select options
+    // Build Select options - search is handled internally by Ant Design
     const selectOptions = useMemo(() => {
-      return displayCountries.map((country) => ({
+      return filteredCountries.map((country) => ({
         value: country.iso2,
         label: (
           <CountryOption country={country} useSVG={useSVG} flagUrl={flagUrl} />
         ),
-        // For search filtering
+        // For search filtering - used by filterOption
         searchText: `${country.name} ${country.iso2} ${country.dialCode}`.toLowerCase(),
       }));
-    }, [displayCountries, useSVG, flagUrl]);
+    }, [filteredCountries, useSVG, flagUrl]);
 
     // Handle Select change
     const onSelectChange = useCallback(
       (iso2: string) => {
         handleCountryChange(iso2);
-        setSearchValue(''); // Clear search after selection
       },
       [handleCountryChange]
     );
 
-    // Handle search
-    const onSearch = useCallback((value: string) => {
-      setSearchValue(value);
-    }, []);
-
-    // Custom filter function
-    const filterOption: SelectProps['filterOption'] = useCallback(
-      (input: string, option: any) => {
+    // Custom filter function - properly typed for Ant Design Select
+    interface SelectOptionData {
+      value: string;
+      label: React.ReactNode;
+      searchText: string;
+    }
+    const filterOption = useCallback(
+      (input: string, option?: SelectOptionData) => {
         if (!option?.searchText) return false;
         return option.searchText.includes(input.toLowerCase());
       },
@@ -308,8 +297,6 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
             options={selectOptions}
             showSearch={enableSearch}
             filterOption={filterOption}
-            onSearch={onSearch}
-            searchValue={searchValue}
             optionLabelProp="label"
             suffixIcon={suffixIcon}
             disabled={disabled || disableDropdown}
@@ -333,7 +320,7 @@ const CountryPhoneInput = forwardRef<CountryPhoneInputRef, CountryPhoneInputProp
           {/* Phone Input */}
           <Input
             {...inputProps}
-            ref={inputRef}
+            ref={antdInputRef}
             className={`${styles.phoneInput} ${inputClassName || ''}`}
             value={state.inputValue}
             onChange={handleInputChange}

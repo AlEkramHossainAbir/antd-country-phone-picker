@@ -11,18 +11,18 @@ import {
   useMemo,
 } from 'react';
 import type { Country } from '@/data/countries';
-import type { CountryPhoneInputProps, PhoneValue, PhoneInputState } from './types';
+import type { PhoneValue, PhoneInputState } from './types';
 import {
   resolveInitialCountry,
   buildInputValue,
   getProtectedPrefixLength,
-  formatDialCode,
   extractPhoneDigits,
   normalizeInputValue,
   isProtectedAction,
   sanitizePastedValue,
   buildPhoneValue,
   getFilteredCountries,
+  getMaxPhoneLength,
 } from './utils';
 
 interface UsePhoneInputOptions {
@@ -111,17 +111,31 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
   const previousValueRef = useRef(state.inputValue);
   const isInternalChangeRef = useRef(false);
 
-  // Handle controlled value changes
+  // Ref to track previous controlled value for comparison
+  const prevControlledValueRef = useRef(controlledValue);
+  
+  // Handle controlled value changes - sync external value changes to state
+  // Using layout effect to sync before paint
   useEffect(() => {
-    if (isControlled && controlledValue !== undefined && !isInternalChangeRef.current) {
-      const phoneDigits = extractPhoneDigits(controlledValue, state.country.dialCode);
-      const newInputValue = buildInputValue(state.country, phoneDigits);
+    // Only sync if the controlled value changed externally (not from internal changes)
+    if (isControlled && 
+        controlledValue !== prevControlledValueRef.current && 
+        !isInternalChangeRef.current) {
+      prevControlledValueRef.current = controlledValue;
+      
+      const phoneDigits = extractPhoneDigits(controlledValue || '', state.country.dialCode);
+      const maxLength = getMaxPhoneLength(state.country);
+      const limitedDigits = maxLength > 0 ? phoneDigits.slice(0, maxLength) : phoneDigits;
+      const newInputValue = buildInputValue(state.country, limitedDigits);
       
       if (newInputValue !== state.inputValue) {
-        setState((prev) => ({
-          ...prev,
-          inputValue: newInputValue,
-        }));
+        // Use queueMicrotask to avoid React compiler warning about sync setState in effect
+        queueMicrotask(() => {
+          setState((prev) => ({
+            ...prev,
+            inputValue: newInputValue,
+          }));
+        });
       }
     }
     isInternalChangeRef.current = false;
@@ -156,7 +170,10 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
 
       // Preserve the phone digits when changing country
       const currentDigits = extractPhoneDigits(state.inputValue, state.country.dialCode);
-      const newInputValue = buildInputValue(newCountry, currentDigits);
+      // Apply max length for new country
+      const newMaxLength = getMaxPhoneLength(newCountry);
+      const trimmedDigits = newMaxLength > 0 ? currentDigits.slice(0, newMaxLength) : currentDigits;
+      const newInputValue = buildInputValue(newCountry, trimmedDigits);
 
       isInternalChangeRef.current = true;
 
@@ -186,7 +203,7 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
     ]
   );
 
-  // Handle input change
+  // Handle input change with phone length validation
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled || readOnly) return;
@@ -195,11 +212,21 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
       const protectedLength = getProtectedPrefixLength(state.country.dialCode);
 
       // Normalize the value to ensure dial code protection
-      const normalizedValue = normalizeInputValue(
+      let normalizedValue = normalizeInputValue(
         newValue,
         state.country,
         previousValueRef.current
       );
+
+      // Enforce max phone length
+      const maxLength = getMaxPhoneLength(state.country);
+      if (maxLength > 0) {
+        const digits = extractPhoneDigits(normalizedValue, state.country.dialCode);
+        if (digits.length > maxLength) {
+          const trimmedDigits = digits.slice(0, maxLength);
+          normalizedValue = buildInputValue(state.country, trimmedDigits);
+        }
+      }
 
       // Calculate cursor position
       let cursorPos = e.target.selectionStart || normalizedValue.length;
@@ -207,6 +234,11 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
       // Ensure cursor is not in protected area
       if (cursorPos < protectedLength) {
         cursorPos = protectedLength;
+      }
+      
+      // Ensure cursor doesn't exceed input length
+      if (cursorPos > normalizedValue.length) {
+        cursorPos = normalizedValue.length;
       }
 
       isInternalChangeRef.current = true;
@@ -265,7 +297,7 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
     [disabled, readOnly, state.country.dialCode]
   );
 
-  // Handle paste
+  // Handle paste with length validation
   const handlePaste = useCallback(
     (e: React.ClipboardEvent<HTMLInputElement>) => {
       if (disabled || readOnly) return;
@@ -277,7 +309,7 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
       const selectionStart = inputElement.selectionStart || 0;
       const selectionEnd = inputElement.selectionEnd || 0;
 
-      const newValue = sanitizePastedValue(
+      let newValue = sanitizePastedValue(
         pastedText,
         state.inputValue,
         selectionStart,
@@ -285,8 +317,17 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
         state.country
       );
 
+      // Enforce max phone length
+      const maxLength = getMaxPhoneLength(state.country);
+      if (maxLength > 0) {
+        const digits = extractPhoneDigits(newValue, state.country.dialCode);
+        if (digits.length > maxLength) {
+          const trimmedDigits = digits.slice(0, maxLength);
+          newValue = buildInputValue(state.country, trimmedDigits);
+        }
+      }
+
       const protectedLength = getProtectedPrefixLength(state.country.dialCode);
-      const pastedDigits = pastedText.replace(/\D/g, '');
       
       // Calculate new cursor position
       let newCursorPos: number;
@@ -294,8 +335,9 @@ export function usePhoneInput(options: UsePhoneInputOptions) {
         // If pasting at protected area, cursor goes to end
         newCursorPos = newValue.length;
       } else {
-        // Cursor after pasted content
-        newCursorPos = selectionStart + pastedDigits.length;
+        // Cursor after pasted content, but not beyond input length
+        const pastedDigits = pastedText.replace(/\D/g, '');
+        newCursorPos = Math.min(selectionStart + pastedDigits.length, newValue.length);
       }
 
       isInternalChangeRef.current = true;

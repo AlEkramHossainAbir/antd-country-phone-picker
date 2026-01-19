@@ -105,6 +105,70 @@ export function searchCountries(
 }
 
 // ─────────────────────────────────────────────────────────────
+// Phone Number Length Validation
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Get maximum phone number length (excluding dial code) for a country.
+ * Calculates from the country format pattern.
+ * Returns 0 if no format is defined (no limit).
+ */
+export function getMaxPhoneLength(country: Country): number {
+  if (!country.format) return 0; // No limit if no format defined
+  
+  // Count dots in format after the dial code part
+  // Format example: "+.. .. ... ...." means dial code takes first ".." 
+  // and remaining ".. ... ...." are the phone digits
+  const formatParts = country.format.split(' ');
+  
+  // First part is dial code pattern (e.g., "+..", "+...", "+....")
+  // Rest are the national number parts
+  const nationalParts = formatParts.slice(1).join(' ');
+  
+  // Count the dots (each dot represents a digit)
+  const dotCount = (nationalParts.match(/\./g) || []).length;
+  
+  return dotCount;
+}
+
+/**
+ * Country-specific phone length overrides for common countries.
+ * Some countries have variable length numbers - use max common length.
+ */
+const PHONE_LENGTH_OVERRIDES: Record<string, number> = {
+  // US/Canada: 10 digits (area code + 7 digit number)
+  'US': 10,
+  'CA': 10,
+  // UK: variable 10-11, use 10 as max for mobile
+  'GB': 10,
+  // India: 10 digits
+  'IN': 10,
+  // Bangladesh: 10 digits (excluding leading 0)
+  'BD': 10,
+  // Germany: variable 10-11
+  'DE': 11,
+  // Australia: 9 digits (mobile)
+  'AU': 9,
+  // China: 11 digits (mobile)
+  'CN': 11,
+  // Japan: 10 digits
+  'JP': 10,
+  // France: 9 digits
+  'FR': 9,
+};
+
+/**
+ * Get the effective max phone length for a country.
+ * Uses overrides first, then falls back to format calculation.
+ */
+export function getEffectiveMaxPhoneLength(country: Country): number {
+  const override = PHONE_LENGTH_OVERRIDES[country.iso2.toUpperCase()];
+  if (override) return override;
+  
+  return getMaxPhoneLength(country);
+}
+
+// ─────────────────────────────────────────────────────────────
 // Country Resolution Utilities
 // ─────────────────────────────────────────────────────────────
 
@@ -193,8 +257,7 @@ export function extractPhoneDigits(inputValue: string, dialCode: string): string
     return inputValue.slice(prefix.length).replace(/\D/g, '');
   }
   // Fallback: remove dial code pattern and extract digits
-  const dialCodeFormatted = formatDialCode(dialCode);
-  return inputValue.replace(dialCodeFormatted, '').replace(/\D/g, '');
+  return inputValue.replace(formatDialCode(dialCode), '').replace(/\D/g, '');
 }
 
 /**
@@ -209,11 +272,11 @@ export function formatPhoneNumber(
   if (!country.format) return phoneDigits;
 
   const { disableParentheses } = options;
-  let format = country.format;
+  const countryFormat = country.format;
 
   // Remove the dial code part from format (everything up to first space after +...)
-  const formatParts = format.split(' ');
-  const dialCodePattern = formatParts[0]; // e.g., "+.." or "+..."
+  const formatParts = countryFormat.split(' ');
+  // First part is dial code pattern (e.g., "+..", "+..."), skip it
   const numberFormat = formatParts.slice(1).join(' '); // rest of the format
 
   if (!numberFormat) return phoneDigits;
@@ -396,9 +459,6 @@ export function normalizeInputValue(
     return expectedPrefix;
   }
 
-  // If the dial code got corrupted, try to recover
-  const dialCodeFormatted = formatDialCode(country.dialCode);
-  
   // Check if it starts with partial dial code
   if (value.startsWith('+')) {
     // Extract what should be the phone number part

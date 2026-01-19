@@ -37,7 +37,12 @@ export default function Home() {
   // Form handling
   const [form] = Form.useForm();
 
-  const handleFormSubmit = (values: any) => {
+  interface FormValues {
+    phone?: PhoneValue;
+    [key: string]: unknown;
+  }
+
+  const handleFormSubmit = (values: FormValues) => {
     console.log('Form values:', values);
     message.success('Form submitted! Check console for values.');
   };
