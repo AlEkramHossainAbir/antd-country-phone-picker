@@ -1,27 +1,86 @@
 {
   "name": "antd-phone-input",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "A production-ready phone input component for Ant Design with country selection, protected dial codes, and automatic validation",
+  "keywords": [
+    "react",
+    "antd",
+    "ant-design",
+    "phone",
+    "phone-input",
+    "telephone",
+    "country-code",
+    "dial-code",
+    "international-phone",
+    "phone-number",
+    "input",
+    "form",
+    "typescript"
+  ],
+  "homepage": "https://github.com/user/antd-phone-input#readme",
+  "bugs": {
+    "url": "https://github.com/user/antd-phone-input/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/user/antd-phone-input.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:lib": "tsup",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build:lib"
   },
-  "dependencies": {
-    "antd": "^5.29.2",
-    "next": "16.1.3",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+  "peerDependencies": {
+    "antd": ">=5.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "antd": "^5.29.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.3",
+    "next": "16.1.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "tailwindcss": "^4",
+    "tsup": "^8.5.1",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -32,7 +32,7 @@ import { Select, Input, Space } from 'antd';
 import type { InputRef } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
-import type { Country } from '@/data/countries';
+import type { Country } from './countries';
 import type {
   CountryPhoneInputProps,
   CountryPhoneInputRef,

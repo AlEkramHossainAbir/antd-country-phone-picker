@@ -10,7 +10,7 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import type { Country } from '@/data/countries';
+import type { Country } from './countries';
 import type { PhoneValue, PhoneInputState } from './types';
 import {
   resolveInitialCountry,

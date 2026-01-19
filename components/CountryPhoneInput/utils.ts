@@ -3,13 +3,13 @@
  * Handles country filtering, phone formatting, and input protection
  */
 
-import type { Country } from '@/data/countries';
+import type { Country } from './countries';
 import type { PhoneValue } from './types';
 import {
   countries as allCountries,
   getCountryByIso2,
   getBestCountryForDialCode,
-} from '@/data/countries';
+} from './countries';
 
 // ─────────────────────────────────────────────────────────────
 // Country Filtering Utilities

@@ -6,7 +6,7 @@
  * 
  * @example
  * ```tsx
- * import { CountryPhoneInput } from './components/CountryPhoneInput';
+ * import { CountryPhoneInput } from 'antd-phone-input';
  * 
  * function App() {
  *   return (
@@ -36,6 +36,17 @@ export type {
   PhoneInputState,
 } from './types';
 
+// Country type and data
+export type { Country } from './countries';
+export {
+  countries,
+  getCountryByIso2,
+  getCountriesByDialCode,
+  getBestCountryForDialCode,
+  searchCountries as searchCountriesData,
+  defaultCountry,
+} from './countries';
+
 // Utilities (for advanced usage)
 export {
   getFilteredCountries,
@@ -49,6 +60,8 @@ export {
   getFlagUrl,
   getFlagEmoji,
   getProtectedPrefixLength,
+  getMaxPhoneLength,
+  getEffectiveMaxPhoneLength,
   DEFAULT_FLAG_CDN,
 } from './utils';
 

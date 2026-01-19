@@ -6,7 +6,7 @@
 import type { InputProps } from 'antd';
 import type { SelectProps } from 'antd';
 import type { ReactNode } from 'react';
-import type { Country } from '@/data/countries';
+import type { Country } from './countries';
 
 /**
  * Structured phone value returned by the component
