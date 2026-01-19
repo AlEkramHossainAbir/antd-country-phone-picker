@@ -1,0 +1,282 @@
+// ============================================================================
+// Antd Country Phone Input - Main Styles
+// ============================================================================
+
+@use 'variables' as *;
+
+// ============================================================================
+// Container
+// ============================================================================
+
+.antd-country-phone-input {
+  display: inline-flex;
+  width: 100%;
+  
+  // Ensure proper border-radius handling with Space.Compact
+  &.ant-space-compact {
+    .ant-select {
+      .ant-select-selector {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    
+    .ant-input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+  
+  // Disabled state
+  &-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    .antd-country-phone-input-select,
+    .antd-country-phone-input-input {
+      cursor: not-allowed;
+    }
+  }
+  
+  // Readonly state
+  &-readonly {
+    .antd-country-phone-input-input {
+      cursor: default;
+    }
+  }
+  
+  // Size variants
+  &-small {
+    .antd-country-phone-input-select {
+      min-width: 100px;
+    }
+    
+    .antd-country-phone-input-flag {
+      width: 16px !important;
+      height: 11px !important;
+    }
+    
+    .antd-country-phone-input-label-code,
+    .antd-country-phone-input-option-code {
+      font-size: $acpi-font-size-sm;
+    }
+  }
+  
+  &-large {
+    .antd-country-phone-input-select {
+      min-width: 140px;
+    }
+    
+    .antd-country-phone-input-flag {
+      width: 24px !important;
+      height: 16px !important;
+    }
+    
+    .antd-country-phone-input-label-code,
+    .antd-country-phone-input-option-code {
+      font-size: $acpi-font-size-lg;
+    }
+  }
+}
+
+// ============================================================================
+// Country Select
+// ============================================================================
+
+.antd-country-phone-input-select {
+  min-width: $acpi-select-min-width;
+  flex-shrink: 0;
+  
+  // Custom selector styling
+  .ant-select-selector {
+    padding-right: $acpi-spacing-md !important;
+  }
+  
+  // Selection content
+  .ant-select-selection-item {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Select label (shown in trigger)
+.antd-country-phone-input-label {
+  display: flex;
+  align-items: center;
+  gap: $acpi-spacing-sm;
+  
+  &-code {
+    font-weight: 500;
+    color: inherit;
+  }
+}
+
+// Dropdown arrow
+.antd-country-phone-input-arrow {
+  font-size: $acpi-select-arrow-size;
+  color: rgba(0, 0, 0, 0.45);
+  transition: transform $acpi-transition-duration $acpi-transition-timing;
+  
+  .ant-select-open & {
+    transform: rotate(180deg);
+  }
+}
+
+// ============================================================================
+// Dropdown
+// ============================================================================
+
+.antd-country-phone-input-dropdown {
+  // Ensure dropdown has proper width
+  min-width: 250px !important;
+  
+  // Option styling
+  .ant-select-item-option {
+    padding: $acpi-spacing-sm $acpi-spacing-md;
+    
+    &-active {
+      background-color: $acpi-hover-background;
+    }
+    
+    &-selected {
+      font-weight: 500;
+      background-color: rgba(24, 144, 255, 0.1);
+    }
+  }
+  
+  // Virtual scroll optimization
+  .ant-select-item {
+    &-empty {
+      padding: $acpi-spacing-md;
+      text-align: center;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+}
+
+// Country option in dropdown
+.antd-country-phone-input-option {
+  display: flex;
+  align-items: center;
+  gap: $acpi-spacing-sm;
+  width: 100%;
+  
+  &-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  &-code {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: $acpi-font-size-sm;
+    flex-shrink: 0;
+  }
+}
+
+// Separator between preferred and other countries
+.antd-country-phone-input-separator {
+  height: 1px !important;
+  padding: 0 !important;
+  margin: $acpi-spacing-xs 0 !important;
+  cursor: default !important;
+  
+  &-line {
+    height: 1px;
+    background-color: $acpi-border-color;
+    margin: 0 $acpi-spacing-md;
+  }
+}
+
+// ============================================================================
+// Flag
+// ============================================================================
+
+.antd-country-phone-input-flag {
+  width: $acpi-flag-width;
+  height: $acpi-flag-height;
+  border-radius: $acpi-flag-border-radius;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+// ============================================================================
+// Phone Input
+// ============================================================================
+
+.antd-country-phone-input-input {
+  flex: 1;
+  min-width: 0;
+  
+  // Ensure input fills available space
+  &.ant-input {
+    width: 100%;
+  }
+  
+  // Input content styling
+  input {
+    letter-spacing: 0.5px;
+  }
+}
+
+// ============================================================================
+// RTL Support
+// ============================================================================
+
+[dir='rtl'] {
+  .antd-country-phone-input {
+    &.ant-space-compact {
+      .ant-select {
+        .ant-select-selector {
+          border-radius: 0 $acpi-border-radius $acpi-border-radius 0;
+        }
+      }
+      
+      .ant-input {
+        border-radius: $acpi-border-radius 0 0 $acpi-border-radius;
+      }
+    }
+  }
+  
+  .antd-country-phone-input-label,
+  .antd-country-phone-input-option {
+    flex-direction: row-reverse;
+  }
+}
+
+// ============================================================================
+// Dark Mode Support (Ant Design dark theme compatible)
+// ============================================================================
+
+.ant-theme-dark,
+[data-theme='dark'] {
+  .antd-country-phone-input-option-code {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  
+  .antd-country-phone-input-arrow {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  
+  .antd-country-phone-input-separator-line {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+  
+  .antd-country-phone-input-flag {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+}
+
+// ============================================================================
+// Print Styles
+// ============================================================================
+
+@media print {
+  .antd-country-phone-input {
+    .ant-select-arrow {
+      display: none;
+    }
+  }
+}
