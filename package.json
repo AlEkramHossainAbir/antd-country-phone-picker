@@ -1,6 +1,6 @@
 {
   "name": "antd-country-phone-picker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A production-ready phone input component for Ant Design with country selection, protected dial codes, and automatic validation. Native feel, TypeScript support, SSR-safe.",
   "keywords": [
     "react",
@@ -20,7 +20,7 @@
     "phone-validation",
     "react-component"
   ],
-  "playground": "https://antd-country-phone-picker-package.vercel.app/",
+  "playground": "https://antd-country-phone-picker.vercel.app/",
   "bugs": {
     "url": "https://github.com/AlEkramHossainAbir/antd-country-phone-picker/issues"
   },
