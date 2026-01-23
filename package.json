@@ -1,6 +1,6 @@
 {
   "name": "antd-country-phone-picker",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A production-ready phone input component for Ant Design with country selection, protected dial codes, and automatic validation. Native feel, TypeScript support, SSR-safe.",
   "keywords": [
     "react",
