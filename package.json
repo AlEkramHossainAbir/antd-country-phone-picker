@@ -52,7 +52,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:lib": "tsup",
+    "build:lib": "tsup && node scripts/process-css.js",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

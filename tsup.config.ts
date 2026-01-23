@@ -1,7 +1,8 @@
 import { defineConfig } from 'tsup';
 import fs from 'fs';
+import path from 'path';
 
-// Simple CSS Modules plugin for esbuild
+// CSS Modules plugin that processes :global() syntax and outputs both JS and CSS
 const cssModulesPlugin = {
   name: 'css-modules',
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -10,7 +11,17 @@ const cssModulesPlugin = {
     build.onLoad({ filter: /\.module\.css$/ }, async (args: any) => {
       const css = await fs.promises.readFile(args.path, 'utf8');
       
-      // Extract class names from CSS
+      // Convert :global() syntax to regular CSS for distribution
+      // This fixes the "global is not recognized as a valid pseudo-class" error
+      let processedCSS = css;
+      
+      // Replace :global(.selector) with just .selector
+      processedCSS = processedCSS.replace(/:global\(([^)]+)\)/g, '$1');
+      
+      // Replace :global at start of selector (e.g., :global(.class) or :global([attr]))
+      processedCSS = processedCSS.replace(/:global\s*/g, '');
+      
+      // Extract class names from original CSS for the JS module
       const classNames = css.match(/\.[\w-]+/g) || [];
       const classNamesObject: Record<string, string> = {};
       
@@ -18,6 +29,12 @@ const cssModulesPlugin = {
         const name = className.slice(1); // Remove leading dot
         classNamesObject[name] = name;
       });
+      
+      // Write processed CSS to dist folder (will be overwritten by tsup's CSS output)
+      // This ensures the distributed CSS doesn't have :global() syntax
+      const outputPath = path.join(process.cwd(), 'dist', 'index.css');
+      fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+      fs.writeFileSync(outputPath, processedCSS);
       
       // Return JS module that exports class names
       const jsContent = `

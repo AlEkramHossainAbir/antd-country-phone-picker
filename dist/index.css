@@ -22,14 +22,14 @@
   flex-shrink: 0;
   position: relative;
 }
-.countrySelect :global(.ant-select-selector) {
+.countrySelect .ant-select-selector {
   padding-left: 8px !important;
   padding-right: 8px !important;
 }
-.countrySelect :global(.ant-select-selection-wrap) {
+.countrySelect .ant-select-selection-wrap {
   width: auto;
 }
-.countrySelect :global(.ant-select-selection-item) {
+.countrySelect .ant-select-selection-item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,7 +46,7 @@
 .phoneInput {
   flex: 1;
 }
-.inputGroup :global(.ant-select-selector) {
+.inputGroup .ant-select-selector {
   border-right-width: 0 !important;
 }
 .inputGroup .phoneInput {
@@ -67,14 +67,14 @@
   border-radius: 6px;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
 }
-.inputGroup:focus-within :global(.ant-select-selector),
+.inputGroup:focus-within .ant-select-selector,
 .inputGroup:focus-within .phoneInput {
   border-color: #1677ff !important;
 }
 .inputGroup:focus-within .countrySelect::after {
   background-color: rgba(22, 119, 255, 0.3);
 }
-.inputGroup:hover :global(.ant-select-selector),
+.inputGroup:hover .ant-select-selector,
 .inputGroup:hover .phoneInput {
   border-color: #4096ff !important;
 }
@@ -131,10 +131,10 @@
 .readOnly .countrySelect {
   pointer-events: none;
 }
-.readOnly .countrySelect :global(.ant-select-arrow) {
+.readOnly .countrySelect .ant-select-arrow {
   display: none;
 }
-.error .countrySelect :global(.ant-select-selector),
+.error .countrySelect .ant-select-selector,
 .error .phoneInput {
   border-color: #ff4d4f !important;
 }
@@ -144,16 +144,16 @@
 .error .inputGroup:focus-within {
   box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
 }
-.error .countrySelect:hover :global(.ant-select-selector),
+.error .countrySelect:hover .ant-select-selector,
 .error .phoneInput:hover {
   border-color: #ff7875 !important;
 }
-.error .countrySelect:global(.ant-select-focused) :global(.ant-select-selector),
+.error .countrySelect.ant-select-focused .ant-select-selector,
 .error .phoneInput:focus {
   border-color: #ff4d4f !important;
   box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1) !important;
 }
-.warning .countrySelect :global(.ant-select-selector),
+.warning .countrySelect .ant-select-selector,
 .warning .phoneInput {
   border-color: #faad14 !important;
 }
@@ -163,37 +163,37 @@
 .warning .inputGroup:focus-within {
   box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.1);
 }
-.warning .countrySelect:hover :global(.ant-select-selector),
+.warning .countrySelect:hover .ant-select-selector,
 .warning .phoneInput:hover {
   border-color: #ffc53d !important;
 }
-.warning .countrySelect:global(.ant-select-focused) :global(.ant-select-selector),
+.warning .countrySelect.ant-select-focused .ant-select-selector,
 .warning .phoneInput:focus {
   border-color: #faad14 !important;
   box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.1) !important;
 }
-:global(.ant-theme-dark) .countryName,
-:global([data-theme=dark]) .countryName {
+.ant-theme-dark .countryName,
+[data-theme=dark] .countryName {
   color: rgba(255, 255, 255, 0.88);
 }
-:global(.ant-theme-dark) .dialCode,
-:global([data-theme=dark]) .dialCode {
+.ant-theme-dark .dialCode,
+[data-theme=dark] .dialCode {
   color: rgba(255, 255, 255, 0.45);
 }
-:global(.ant-theme-dark) .arrowIcon,
-:global([data-theme=dark]) .arrowIcon {
+.ant-theme-dark .arrowIcon,
+[data-theme=dark] .arrowIcon {
   color: rgba(255, 255, 255, 0.45);
 }
-:global(.ant-theme-dark) .countrySelect:hover .arrowIcon,
-:global([data-theme=dark]) .countrySelect:hover .arrowIcon {
+.ant-theme-dark .countrySelect:hover .arrowIcon,
+[data-theme=dark] .countrySelect:hover .arrowIcon {
   color: rgba(255, 255, 255, 0.65);
 }
-:global(.ant-theme-dark) .countrySelect::after,
-:global([data-theme=dark]) .countrySelect::after {
+.ant-theme-dark .countrySelect::after,
+[data-theme=dark] .countrySelect::after {
   background-color: rgba(255, 255, 255, 0.1);
 }
-:global(.ant-theme-dark) .inputGroup:focus-within,
-:global([data-theme=dark]) .inputGroup:focus-within {
+.ant-theme-dark .inputGroup:focus-within,
+[data-theme=dark] .inputGroup:focus-within {
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 @media (max-width: 480px) {
@@ -213,10 +213,10 @@
     font-size: 12px;
   }
 }
-:global([dir=rtl]) .countryOption {
+[dir=rtl] .countryOption {
   flex-direction: row-reverse;
 }
-:global([dir=rtl]) .dialCode {
+[dir=rtl] .dialCode {
   margin-right: auto;
   margin-left: 0;
 }
