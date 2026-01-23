@@ -226,6 +226,7 @@ Remove specific countries from the list:
   style={{ maxWidth: 400 }}
   size="large"
   variant="filled"
+  grouped={true}
 />
 ```
 
@@ -277,6 +278,23 @@ Remove specific countries from the list:
 |------|------|---------|-------------|
 | `useSVG` | `boolean` | `true` | Use **SVG flags**. If `false`, falls back to PNG/emoji flags. SVG provides better quality and smaller size. |
 | `flagUrl` | `string` | `undefined` | **Custom CDN URL** for flag images. Overrides default flag source. Must include trailing path structure. |
+| `grouped` | `boolean` | `false` | **Visual grouping mode**. When `true`, the select and input fields appear unified by removing the border between them for a seamless look. |
+
+### Grouped Visual Mode
+
+Control the visual appearance of the input group:
+
+```tsx
+// Default (non-grouped) - separate select and input with visible border
+<CountryPhoneInput defaultCountry="US" />
+
+// Grouped mode - unified appearance with no border between select and input
+<CountryPhoneInput defaultCountry="US" grouped={true} />
+```
+
+**When to use:**
+- `grouped={false}` (default): Clear separation between country selector and phone input
+- `grouped={true}`: Seamless, unified appearance for a more compact design
 
 ### Styling Props
 
